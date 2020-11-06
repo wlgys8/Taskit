@@ -1,0 +1,9 @@
+{
+	"name":"com.ms.taskit",
+	"display":"Taskit",
+	"version":"0.0.1",
+	"description":"Taskit",
+	"dependencies": {
+		"com.ms.eventbus":"0.0.1"
+	}
+}

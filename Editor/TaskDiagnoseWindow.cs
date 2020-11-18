@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 
 namespace MS.Taskit.Diagnose.Editor{
     using MS.Taskit.Editor;
@@ -132,9 +133,16 @@ namespace MS.Taskit.Diagnose.Editor{
         private bool _showArchivedTasks = true;
         private Vector2 _progressOfArchivedTask;
 
+        private SearchField _archivedSearcher ;
+        private string _archivedSearchTEXT = "";
+
         private void DrawArchivedTaskIds(){
             _showArchivedTasks = EditorGUILayout.Foldout(_showArchivedTasks,"Archived Tasks");
             if(_showArchivedTasks){
+                if(_archivedSearcher == null){
+                    _archivedSearcher = new SearchField();
+                }
+                _archivedSearchTEXT = _archivedSearcher.OnGUI(_archivedSearchTEXT);
 
                 var archivedTaskIds = TaskDiagnose.GetArchivedTaskIds(_currentManagerId);
                 var width = this.position.width;
@@ -152,7 +160,13 @@ namespace MS.Taskit.Diagnose.Editor{
                     var line = Mathf.FloorToInt(i / countPerLine);
                     var offset = i % countPerLine;
                     var r = new Rect(rect.x + offset * itemWidth, rect.y + line * lineHeight,itemWidth,lineHeight);
-                    GUI.Label(r,tid.ToString());
+                    var str = tid.ToString();
+                    var backColor = GUI.color;
+                    if(_archivedSearchTEXT.Length > 0 && str.Contains(_archivedSearchTEXT)){
+                        GUI.color = Color.red;
+                    }
+                    GUI.Label(r,str);
+                    GUI.color = backColor;
                 }
 
                 EditorGUILayout.EndScrollView();
